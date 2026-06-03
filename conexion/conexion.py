@@ -1,6 +1,6 @@
 import mysql.connector
 
-class conexion:
+class Conexion:
     @staticmethod
     #Definiendo que esta clase no tiene algo que definir con el atributo 'self'
     def conectar():
@@ -8,4 +8,5 @@ class conexion:
                                   host='localhost',
                                   database='bdasistencia', 
                                   port= '3306')
-print(conexion)
+        return conexion
+    
