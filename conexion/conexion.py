@@ -1,3 +1,4 @@
+#conexion con BD
 import mysql.connector
 
 class Conexion:
