@@ -15,4 +15,6 @@ class Conexion:
         
         except mysql.connector.Error as e:
             print("Error en la conexión: ",e)
+            return None 
+        #retornar error cuando sql esta apagado o no hay conexion
     
