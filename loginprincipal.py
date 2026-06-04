@@ -36,7 +36,7 @@ card.place(relx=0.5, rely=0.5, anchor="center")
 
 # LOGO
 imagen = ctk.CTkImage(
-    light_image=Image.open("imagenes/ardillapoo.png"),
+    light_image=Image.open("vistas/imagenes/ardillapoo.png"),
     size=(80, 80)
 )
 

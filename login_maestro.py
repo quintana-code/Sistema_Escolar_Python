@@ -69,7 +69,7 @@ subtitulo.place(x=20, y=25)
 # ==========================
 # IMAGEN
 imagen = ctk.CTkImage(
-    light_image=Image.open("imagenes/maestro.jpg"),
+    light_image=Image.open("vistas/imagenes/maestro.jpg"),
     size=(100, 100)
 )
 
