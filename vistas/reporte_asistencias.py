@@ -1,6 +1,53 @@
 import customtkinter as ctk
-from tkinter import ttk
+from tkinter import ttk, filedialog, messagebox
 from tkcalendar import DateEntry
+
+# ======================
+# FUNCIÓN EXPORTAR
+# ======================
+
+def exportar_reporte():
+
+    archivo = filedialog.asksaveasfilename(
+        title="Guardar reporte",
+        defaultextension=".csv",
+        filetypes=[("Archivos CSV", "*.csv")]
+    )
+
+    if not archivo:
+        return
+
+    try:
+
+        with open(
+            archivo,
+            "w",
+            encoding="utf-8",
+            newline=""
+        ) as f:
+
+            f.write("Estudiante,Fecha,Estado,Marcado por\n")
+
+            for item in tabla.get_children():
+
+                datos = tabla.item(item)["values"]
+
+                f.write(
+                    ",".join(map(str, datos))
+                    + "\n"
+                )
+
+        messagebox.showinfo(
+            "Éxito",
+            "Reporte exportado correctamente."
+        )
+
+    except Exception as e:
+
+        messagebox.showerror(
+            "Error",
+            str(e)
+        )
 
 # ======================
 # CONFIGURACIÓN
@@ -10,7 +57,7 @@ ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
 
 ventana = ctk.CTk()
-ventana.geometry("1000x650")
+ventana.geometry("1000x750")
 ventana.title("Sistema Escolar - Reportes")
 ventana.configure(fg_color="#F3F4F6")
 
@@ -18,7 +65,12 @@ ventana.configure(fg_color="#F3F4F6")
 # HEADER
 # ======================
 
-header = ctk.CTkFrame(ventana, fg_color="white", height=60, corner_radius=0)
+header = ctk.CTkFrame(
+    ventana,
+    fg_color="white",
+    height=60,
+    corner_radius=0
+)
 header.pack(fill="x")
 
 ctk.CTkLabel(
@@ -33,7 +85,7 @@ ctk.CTkLabel(
     text="maestro@escuela.com   |   PROFESOR",
     font=("Arial", 12),
     text_color="gray"
-).place(x=750, y=18)
+).place(x=720, y=18)
 
 # ======================
 # TITULO
@@ -79,17 +131,13 @@ ctk.CTkLabel(
 ).place(x=20, y=40)
 
 # ======================
-# CALENDARIOS (CORREGIDOS)
+# FECHAS
 # ======================
-
 fecha_inicio = DateEntry(
     card_filtros,
     width=18,
     date_pattern="yyyy-mm-dd",
-    year=2025,
-    mindate=None,
-    maxdate=None,
-    selectmode="day"
+    state="normal"
 )
 fecha_inicio.place(x=20, y=80)
 
@@ -97,10 +145,7 @@ fecha_fin = DateEntry(
     card_filtros,
     width=18,
     date_pattern="yyyy-mm-dd",
-    year=2025,
-    mindate=None,
-    maxdate=None,
-    selectmode="day"
+    state="normal"
 )
 fecha_fin.place(x=250, y=80)
 
@@ -117,13 +162,13 @@ ctk.CTkButton(
 ).place(x=480, y=80)
 
 # ======================
-# TABLA
+# CARD TABLA
 # ======================
 
 card_tabla = ctk.CTkFrame(
     ventana,
     width=920,
-    height=350,
+    height=420,
     fg_color="white",
     corner_radius=15
 )
@@ -137,53 +182,134 @@ ctk.CTkLabel(
 
 ctk.CTkLabel(
     card_tabla,
-    text="Total: 0 registros",
+    text="Total: 50 registros",
     text_color="gray"
 ).place(x=20, y=40)
 
 # ======================
-# FRAME TABLA + SCROLL
+# BOTÓN EXPORTAR
+# ======================
+
+ctk.CTkButton(
+    card_tabla,
+    text="📄 Exportar CSV",
+    width=150,
+    height=35,
+    fg_color="#163B65",
+    hover_color="#0f2d4d",
+    command=exportar_reporte
+).place(x=730, y=20)
+
+# ======================
+# FRAME TABLA
 # ======================
 
 tabla_frame = ctk.CTkFrame(
     card_tabla,
     width=880,
-    height=240,
+    height=320,
     fg_color="white"
 )
-tabla_frame.place(x=20, y=80)
 
-scrollbar = ttk.Scrollbar(tabla_frame, orient="vertical")
+tabla_frame.place(
+    x=20,
+    y=80
+)
+
+# ======================
+# SCROLLS
+# ======================
+
+scroll_y = ttk.Scrollbar(
+    tabla_frame,
+    orient="vertical"
+)
+
+scroll_x = ttk.Scrollbar(
+    tabla_frame,
+    orient="horizontal"
+)
+
+# ======================
+# TABLA
+# ======================
 
 tabla = ttk.Treeview(
     tabla_frame,
     columns=("est", "fecha", "estado", "marcado"),
     show="headings",
-    yscrollcommand=scrollbar.set
+    yscrollcommand=scroll_y.set,
+    xscrollcommand=scroll_x.set
 )
 
-scrollbar.config(command=tabla.yview)
-scrollbar.pack(side="right", fill="y")
+scroll_y.config(command=tabla.yview)
+scroll_x.config(command=tabla.xview)
 
-tabla.pack(side="left", fill="both", expand=True)
+# ======================
+# ENCABEZADOS
+# ======================
 
-# COLUMNAS
 tabla.heading("est", text="Estudiante")
 tabla.heading("fecha", text="Fecha")
 tabla.heading("estado", text="Estado")
 tabla.heading("marcado", text="Marcado por")
 
-tabla.column("est", width=200)
-tabla.column("fecha", width=120)
-tabla.column("estado", width=120)
-tabla.column("marcado", width=150)
+# ======================
+# COLUMNAS
+# ======================
 
-# EJEMPLO
-tabla.insert("", "end", values=(
-    "No hay registros para el rango seleccionado",
-    "",
-    "",
-    ""
-))
+tabla.column(
+    "est",
+    width=450,
+    minwidth=400,
+    anchor="w"
+)
+
+tabla.column(
+    "fecha",
+    width=150,
+    anchor="center"
+)
+
+tabla.column(
+    "estado",
+    width=150,
+    anchor="center"
+)
+
+tabla.column(
+    "marcado",
+    width=200,
+    anchor="center"
+)
+
+# ======================
+# EMPAQUETAR
+# ======================
+
+scroll_y.pack(side="right", fill="y")
+scroll_x.pack(side="bottom", fill="x")
+
+tabla.pack(
+    side="left",
+    fill="both",
+    expand=True
+)
+
+# ======================
+# DATOS DE PRUEBA
+# ======================
+
+for i in range(1, 51):
+    tabla.insert(
+        "",
+        "end",
+        values=(
+            f"Alumno {i} Nombre Apellido",
+            "2025-06-04",
+            "Presente",
+            "Profesor"
+        )
+    )
 
 ventana.mainloop()
