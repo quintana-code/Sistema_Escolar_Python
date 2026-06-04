@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from PIL import Image
-
+from vistas.login_maestro import abrir_login_maestro
+from vistas.login_Admin import abrir_login_admin
 # CONFIGURACIÓN
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
@@ -85,10 +86,12 @@ descripcion.place(relx=0.5, y=315, anchor="center")
 
 # FUNCIONES
 def profesor():
-    print("Profesor")
+    ventana.destroy()
+    abrir_login_maestro()
 
 def administrador():
-    print("Administrador")
+    ventana.destroy()
+    abrir_login_admin()
 
 # BOTÓN PROFESOR
 btn_profesor = ctk.CTkButton(
