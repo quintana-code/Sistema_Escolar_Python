@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from Controladores.usuario_controlador import Controlador_Usuario
+from vistas.menu_maestro import abrir_menu_maestro
 from PIL import Image
 
 def abrir_login_maestro():
@@ -144,20 +145,35 @@ def abrir_login_maestro():
     def login():
         usuario = entry_usuario.get()
         password = entry_password.get()
-        datos = Controlador_Usuario.login(
-            usuario,
-            password
-        )
+        
+        datos = Controlador_Usuario.login(usuario, password)
+        
+        print(datos)
 
         if datos:
-            resultado.configure(
-                text="Inicio de sesión correcto",
-                text_color="green"
-            )
+            id_usuario = datos[0]
+            nombre_usuario = datos[1]
+            rol= datos[3]
+
+            if rol == "Maestro":
+
+                resultado.configure(
+                    text="Inicio de sesión correcto",text_color="green")
+                
+                # retrasa la apertura de la nueva pantalla 'main menu' del maestro
+                ventana.after(1000,lambda: 
+                            (ventana.destroy(),abrir_menu_maestro(id_usuario,nombre_usuario, rol)
+                    )
+                )
+            else:
+                #validar si el usuario pertenece a la clase maestro o admin
+                resultado.configure(
+                    text="El suario NO es un maestro.", text_color="red"
+                )
         else:
+            #validar si la contraseña o usuario es incorrecta
             resultado.configure(
-                text="Usuario o contraseña incorrectos",
-                text_color="red"
+                text="Usuario o contraseña incorrectos", text_color="red"
             )
 
     # ==========================
