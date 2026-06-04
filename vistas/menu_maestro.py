@@ -14,10 +14,6 @@ def consultar_asistencia():
     print("Consultar asistencias")
 
 
-def generar_reportes():
-    print("Generar reportes")
-
-
 def cerrar_sesion():
     ventana.destroy()
 
@@ -32,6 +28,7 @@ ventana.geometry("900x650")
 ventana.configure(bg="#e8e8e8")
 ventana.resizable(False, False)
 
+
 # ------------------------
 # Cargar iconos
 # ------------------------
@@ -44,13 +41,10 @@ icono_consulta = ImageTk.PhotoImage(
     Image.open("iconos/consulta.png").resize((40, 40))
 )
 
-icono_reporte = ImageTk.PhotoImage(
-    Image.open("iconos/reporte.png").resize((40, 40))
-)
-
 icono_salir = ImageTk.PhotoImage(
     Image.open("iconos/salir.png").resize((40, 40))
 )
+
 
 # ------------------------
 # Contenedor principal
@@ -64,6 +58,7 @@ contenedor = tk.Frame(
 )
 
 contenedor.place(relx=0.5, rely=0.5, anchor="center")
+
 
 # ------------------------
 # Encabezado
@@ -88,6 +83,7 @@ profesor = tk.Label(
 )
 
 profesor.place(x=42, y=65)
+
 
 # ------------------------
 # Bienvenida
@@ -160,7 +156,6 @@ def crear_tarjeta(x, y, titulo, descripcion, icono, comando):
         bg="white",
         fg="#173f73"
     )
-
     lbl_titulo.place(x=70, y=25)
 
     lbl_desc = tk.Label(
@@ -170,10 +165,9 @@ def crear_tarjeta(x, y, titulo, descripcion, icono, comando):
         bg="white",
         fg="gray"
     )
-
     lbl_desc.place(x=70, y=55)
 
-    # Hacer clic en toda la tarjeta
+    # Click en toda la tarjeta
     tarjeta.bind("<Button-1>", lambda e: comando())
     lbl_icono.bind("<Button-1>", lambda e: comando())
     lbl_titulo.bind("<Button-1>", lambda e: comando())
@@ -200,20 +194,17 @@ crear_tarjeta(
     consultar_asistencia
 )
 
-crear_tarjeta(
-    60, 390,
-    "Generar reportes",
-    "Exportar PDF o Excel",
-    icono_reporte,
-    generar_reportes
-)
+# ------------------------
+# Cerrar sesión centrado
+# ------------------------
 
 crear_tarjeta(
-    370, 390,
+    235, 390,  # centrado en 750px de ancho
     "Cerrar sesión",
     "Salir del sistema",
     icono_salir,
     cerrar_sesion
 )
+
 
 ventana.mainloop()
