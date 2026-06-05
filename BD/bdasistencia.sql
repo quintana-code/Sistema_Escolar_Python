@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 05-06-2026 a las 03:43:24
+-- Tiempo de generación: 05-06-2026 a las 05:09:01
 -- Versión del servidor: 8.3.0
 -- Versión de PHP: 8.2.18
 
@@ -60,37 +60,19 @@ CREATE TABLE IF NOT EXISTS `asistencia` (
   PRIMARY KEY (`IdAsistencia`),
   KEY `fk_asistencia_alumno` (`IdAlumno`),
   KEY `fk_asistencia_materia` (`IdMateria`)
-) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `asistencia`
 --
 
 INSERT INTO `asistencia` (`IdAsistencia`, `Fecha`, `Estado`, `IdAlumno`, `IdMateria`) VALUES
-(24, '2026-06-04', 'Presente', '14151616', 3),
-(23, '2026-06-04', 'Retardo', '18131215', 3),
-(22, '2026-06-04', 'Presente', '24151813', 3),
-(21, '2026-06-04', 'Ausente', '24801515', 3),
-(20, '2026-06-04', 'Presente', '14151616', 3),
-(19, '2026-06-04', 'Presente', '18131215', 3),
-(18, '2026-06-04', 'Presente', '24151813', 3),
-(17, '2026-06-04', 'Ausente', '24801515', 3),
-(25, '2026-06-04', 'Ausente', '24801515', 4),
-(26, '2026-06-04', 'Retardo', '24151813', 4),
-(27, '2026-06-04', 'Retardo', '18131215', 4),
-(28, '2026-06-04', 'Presente', '14151616', 4),
-(29, '2026-06-04', 'Ausente', '24801515', 1),
-(30, '2026-06-04', 'Ausente', '24151813', 1),
-(31, '2026-06-04', 'Ausente', '18131215', 1),
-(32, '2026-06-04', 'Ausente', '14151616', 1),
-(33, '2026-06-04', 'Ausente', '24801515', 1),
-(34, '2026-06-04', 'Ausente', '24151813', 1),
-(35, '2026-06-04', 'Ausente', '18131215', 1),
-(36, '2026-06-04', 'Ausente', '14151616', 1),
-(37, '2026-06-04', 'Ausente', '24801515', 1),
-(38, '2026-06-04', 'Presente', '24151813', 1),
-(39, '2026-06-04', 'Presente', '18131215', 1),
-(40, '2026-06-04', 'Retardo', '14151616', 1);
+(46, '2026-06-04', 'Presente', '18131215', 3),
+(45, '2026-06-04', 'Presente', '24151813', 3),
+(44, '2026-06-04', 'Retardo', '24801515', 3),
+(43, '2026-06-04', 'Ausente', '18131215', 1),
+(42, '2026-06-04', 'Ausente', '24151813', 1),
+(41, '2026-06-04', 'Ausente', '24801515', 1);
 
 -- --------------------------------------------------------
 

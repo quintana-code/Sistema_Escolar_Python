@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from Controladores.alumno_controlador import Controlador_Alumno
+
 from tkinter import messagebox
 def abrir_gestiona_alumnos(id_usuario, nombre_usuario, rol, menu_admin):
 

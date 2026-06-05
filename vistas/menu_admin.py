@@ -1,4 +1,5 @@
 from vistas.gestion_alumnos import abrir_gestiona_alumnos
+from vistas.reporte_asiadmin import abrir_reporte_admin
 
 import customtkinter as ctk
 from tkinter import messagebox
@@ -9,6 +10,10 @@ def abrir_menu_admin(id_usuario, nombre_usuario, rol):
     def gestion_alumnos():
         app.withdraw()
         abrir_gestiona_alumnos(id_usuario, nombre_usuario, rol, app)
+    def abrir_reportes():
+
+        app.withdraw()
+        abrir_reporte_admin(id_usuario,nombre_usuario,rol, app)
 
     def cerrar_sesion():
         respuesta = messagebox.askyesno("Cerrar sesión","¿Deseas cerrar sesión y volver al inicio?",icon="warning"
@@ -175,7 +180,8 @@ def abrir_menu_admin(id_usuario, nombre_usuario, rol):
         text_color="black",
         hover_color="#EAEAEA",
         corner_radius=12,
-        font=("Arial", 16, "bold")
+        font=("Arial", 16, "bold"),
+        command= abrir_reportes
     )
     btn_reportes.pack(fill="x", padx=40, pady=8)
 
