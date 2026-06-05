@@ -1,219 +1,285 @@
+from Controladores.reporte_admin_controlador import Controlador_Reporte_Admin
+
 import customtkinter as ctk
+from tkinter import filedialog, messagebox
 from tkinter import ttk
 from tkcalendar import DateEntry
 
-# ==========================
-# CONFIGURACIÓN
-# ==========================
+def abrir_reporte_admin(id_usuario, nombre_usuario, rol, menu_admin):
+    
+  
+    # ==========================
+    # CONFIGURACIÓN
+    # ==========================
+    def exportar_reporte(): #funcion para exportar la tablita IAXD
 
-ctk.set_appearance_mode("light")
-ctk.set_default_color_theme("blue")
+        archivo = filedialog.asksaveasfilename(
+            title="Guardar reporte",
+            defaultextension=".csv",
+            filetypes=[("Archivos CSV", "*.csv")]
+        )
 
-app = ctk.CTk()
-app.title("Sistema Escolar")
-app.geometry("1200x700")
+        if not archivo:
+            return
 
-# ==========================
-# FUNCIÓN REGRESAR
-# ==========================
+        try:
 
-def regresar():
-    print("Regresando al menú anterior...")
+            with open(
+                archivo,
+                "w",
+                encoding="utf-8",
+                newline=""
+            ) as f:
 
-# ==========================
-# ESTILOS DE TABLA
-# ==========================
+                f.write(
+                    "Matricula,Alumno,Fecha,Estado,Materia,Maestro\n"
+                )
 
-style = ttk.Style()
-style.theme_use("default")
+                for item in tabla.get_children():
 
-style.configure(
-    "Treeview",
-    rowheight=35,
-    font=("Arial", 11),
-    borderwidth=1,
-    relief="solid"
-)
+                    datos = tabla.item(item)["values"]
 
-style.configure(
-    "Treeview.Heading",
-    font=("Arial", 11, "bold"),
-    borderwidth=2,
-    relief="raised"
-)
+                    f.write(
+                        ",".join(map(str, datos)) + "\n"
+                    )
 
-# ==========================
-# ENCABEZADO
-# ==========================
+            messagebox.showinfo(
+                "Éxito",
+                "Reporte exportado correctamente."
+            )
 
-frame_header = ctk.CTkFrame(app, fg_color="transparent")
-frame_header.pack(fill="x", padx=20, pady=(20, 10))
+        except Exception as e:
 
-lado_izquierdo = ctk.CTkFrame(frame_header, fg_color="transparent")
-lado_izquierdo.pack(side="left")
+            messagebox.showerror(
+                "Error",
+                str(e)
+            )
+    ctk.set_appearance_mode("light")
+    ctk.set_default_color_theme("blue")
 
-titulo = ctk.CTkLabel(
-    lado_izquierdo,
-    text="Reportes de asistencia",
-    font=("Arial", 32, "bold")
-)
-titulo.pack(anchor="w")
+    app = ctk.CTkToplevel()
+    app.title("Sistema Escolar")
+    app.geometry("1200x700")
 
-subtitulo = ctk.CTkLabel(
-    lado_izquierdo,
-    text="Consulta registros de asistencia por rango de fechas",
-    text_color="gray",
-    font=("Arial", 14)
-)
-subtitulo.pack(anchor="w")
+    # ==========================
+    # FUNCIÓN REGRESAR
+    # ==========================
 
-# ==========================
-# FILTROS
-# ==========================
 
-frame_filtros = ctk.CTkFrame(app, corner_radius=10)
-frame_filtros.pack(fill="x", padx=20, pady=20)
+    def regresar():
 
-lbl_filtro = ctk.CTkLabel(
-    frame_filtros,
-    text="Filtros",
-    font=("Arial", 18, "bold")
-)
-lbl_filtro.pack(anchor="w", padx=20, pady=(15, 0))
+        app.destroy()
+        menu_admin.deiconify()
+    app.protocol("WM_DELETE_WINDOW", regresar)
 
-lbl_desc = ctk.CTkLabel(
-    frame_filtros,
-    text="Selecciona el rango de fechas para consultar",
-    text_color="gray"
-)
-lbl_desc.pack(anchor="w", padx=20)
+    # ==========================
+    # ESTILOS DE TABLA
+    # ==========================
 
-frame_campos = ctk.CTkFrame(frame_filtros, fg_color="transparent")
-frame_campos.pack(fill="x", padx=20, pady=20)
+    style = ttk.Style()
+    style.theme_use("default")
 
-# Bloquear escritura manual
-def bloquear_teclado(event):
-    return "break"
+    style.configure(
+        "Treeview",
+        rowheight=35,
+        font=("Arial", 11),
+        borderwidth=1,
+        relief="solid"
+    )
 
-# Fecha inicio
-fecha_inicio = DateEntry(
-    frame_campos,
-    date_pattern="dd/mm/yyyy",
-    width=20,
-    font=("Arial", 11),
-    cursor="hand2",
-    state="readonly"
-)
-fecha_inicio.pack(
-    side="left",
-    padx=(0, 10),
-    ipady=6
-)
+    style.configure(
+        "Treeview.Heading",
+        font=("Arial", 11, "bold"),
+        borderwidth=2,
+        relief="raised"
+    )
 
-# Fecha fin
-fecha_fin = DateEntry(
-    frame_campos,
-    date_pattern="dd/mm/yyyy",
-    width=20,
-    font=("Arial", 11),
-    cursor="hand2",
-    state="readonly"
-)
-fecha_fin.pack(
-    side="left",
-    padx=(0, 10),
-    ipady=6
-)
+    # ==========================
+    # ENCABEZADO
+    # ==========================
 
-# Bloquear todas las teclas
-fecha_inicio.bind("<KeyPress>", bloquear_teclado)
-fecha_fin.bind("<KeyPress>", bloquear_teclado)
+    frame_header = ctk.CTkFrame(app, fg_color="transparent")
+    frame_header.pack(fill="x", padx=20, pady=(20, 10))
 
-# Forzar readonly después de crear los widgets
-fecha_inicio.configure(state="readonly")
-fecha_fin.configure(state="readonly")
+    lado_izquierdo = ctk.CTkFrame(frame_header, fg_color="transparent")
+    lado_izquierdo.pack(side="left")
 
-btn_buscar = ctk.CTkButton(
-    frame_campos,
-    text="Buscar",
-    width=250,
-    height=35
-)
-btn_buscar.pack(side="left", padx=(10, 0))
-# ==========================
-# TABLA
-# ==========================
+    titulo = ctk.CTkLabel(
+        lado_izquierdo,
+        text="Reportes de asistencia",
+        font=("Arial", 32, "bold")
+    )
+    titulo.pack(anchor="w")
 
-frame_tabla = ctk.CTkFrame(app)
-frame_tabla.pack(fill="both", expand=True, padx=20, pady=(0, 20))
+    subtitulo = ctk.CTkLabel(
+        lado_izquierdo,
+        text="Consulta registros de asistencia por rango de fechas",
+        text_color="gray",
+        font=("Arial", 14)
+    )
+    subtitulo.pack(anchor="w")
 
-encabezado = ctk.CTkFrame(frame_tabla, fg_color="transparent")
-encabezado.pack(fill="x", padx=20, pady=15)
+    # ==========================
+    # FILTROS
+    # ==========================
 
-titulo_tabla = ctk.CTkLabel(
-    encabezado,
-    text="Registros de asistencia",
-    font=("Arial", 20, "bold")
-)
-titulo_tabla.pack(side="left")
+    frame_filtros = ctk.CTkFrame(app, corner_radius=10)
+    frame_filtros.pack(fill="x", padx=20, pady=20)
 
-btn_exportar = ctk.CTkButton(
-    encabezado,
-    text="Exportar",
-    width=100
-)
-btn_exportar.pack(side="right")
+    lbl_filtro = ctk.CTkLabel(
+        frame_filtros,
+        text="Filtros",
+        font=("Arial", 18, "bold")
+    )
+    lbl_filtro.pack(anchor="w", padx=20, pady=(15, 0))
 
-# ==========================
-# CONTENEDOR TABLA
-# ==========================
+    lbl_desc = ctk.CTkLabel(
+        frame_filtros,
+        text="Selecciona el rango de fechas para consultar y PRESIONA Buscar para que logres ver los registros hasta el momento.",
+        text_color="gray"
+    )
+    lbl_desc.pack(anchor="w", padx=20)
 
-contenedor_tabla = ctk.CTkFrame(frame_tabla, fg_color="transparent")
-contenedor_tabla.pack(fill="both", expand=True, padx=20, pady=(0, 20))
+    frame_campos = ctk.CTkFrame(frame_filtros, fg_color="transparent")
+    frame_campos.pack(fill="x", padx=20, pady=20)
 
-scroll_y = ttk.Scrollbar(contenedor_tabla)
-scroll_y.pack(side="right", fill="y")
+    # Bloquear escritura manual
+    def bloquear_teclado(event):
+        return "break"
 
-columnas = (
-    "Estudiante",
+    # Fecha inicio
+    fecha_inicio = DateEntry(
+        frame_campos,
+        date_pattern="dd/mm/yyyy",
+        width=20,
+        font=("Arial", 11),
+        cursor="hand2",
+        state="readonly"
+    )
+    fecha_inicio.pack(
+        side="left",
+        padx=(0, 10),
+        ipady=6
+    )
+
+    # Fecha fin
+    fecha_fin = DateEntry(
+        frame_campos,
+        date_pattern="dd/mm/yyyy",
+        width=20,
+        font=("Arial", 11),
+        cursor="hand2",
+        state="readonly"
+    )
+    fecha_fin.pack(
+        side="left",
+        padx=(0, 10),
+        ipady=6
+    )
+
+    # Bloquear todas las teclas
+    fecha_inicio.bind("<KeyPress>", bloquear_teclado)
+    fecha_fin.bind("<KeyPress>", bloquear_teclado)
+
+    # Forzar readonly después de crear los widgets
+    fecha_inicio.configure(state="readonly")
+    fecha_fin.configure(state="readonly")
+    def consulta():
+
+        fecha1 = fecha_inicio.get_date()
+        fecha2 = fecha_fin.get_date()
+
+        datos = Controlador_Reporte_Admin.obtener_asistencias(fecha1, fecha2)
+
+        # limpiar tabla
+        for fila in tabla.get_children():
+            tabla.delete(fila)
+
+        # cargar datos
+        for registro in datos:
+
+            tabla.insert("","end",values=registro)
+            
+    btn_buscar = ctk.CTkButton(
+        frame_campos,
+        text="Buscar",
+        width=250,
+        height=35,
+        command= consulta
+    )
+    btn_buscar.pack(side="left", padx=(10, 0))
+    # ==========================
+    # TABLA
+    # ==========================
+
+    frame_tabla = ctk.CTkFrame(app)
+    frame_tabla.pack(fill="both", expand=True, padx=20, pady=(0, 20))
+
+    encabezado = ctk.CTkFrame(frame_tabla, fg_color="transparent")
+    encabezado.pack(fill="x", padx=20, pady=15)
+
+    titulo_tabla = ctk.CTkLabel(
+        encabezado,
+        text="Registros de asistencia",
+        font=("Arial", 20, "bold")
+    )
+    titulo_tabla.pack(side="left")
+
+    btn_exportar = ctk.CTkButton(
+        encabezado,
+        text="Exportar",
+        width=100,
+        command= exportar_reporte
+    )
+    btn_exportar.pack(side="right")
+
+    # ==========================
+    # CONTENEDOR TABLA
+    # ==========================
+
+    contenedor_tabla = ctk.CTkFrame(frame_tabla, fg_color="transparent")
+    contenedor_tabla.pack(fill="both", expand=True, padx=20, pady=(0, 20))
+
+    scroll_y = ttk.Scrollbar(contenedor_tabla)
+    scroll_y.pack(side="right", fill="y")
+
+    columnas = (
+    "Matricula",
+    "Alumno",
     "Fecha",
     "Estado",
-    "Marcado por"
-)
+    "Materia",
+    "Maestro"
+    )
 
-tabla = ttk.Treeview(
-    contenedor_tabla,
-    columns=columnas,
-    show="headings",
-    yscrollcommand=scroll_y.set
-)
+    tabla = ttk.Treeview(
+        contenedor_tabla,
+        columns=columnas,
+        show="headings",
+        yscrollcommand=scroll_y.set
+    )
 
-scroll_y.config(command=tabla.yview)
+    scroll_y.config(command=tabla.yview)
 
-# Columnas más visibles
-tabla.heading("Estudiante", text="Estudiante")
-tabla.heading("Fecha", text="Fecha")
-tabla.heading("Estado", text="Estado")
-tabla.heading("Marcado por", text="Marcado por")
+    # Columnas más visibles
+    tabla.heading("Matricula", text="Matrícula")
+    tabla.heading("Alumno", text="Alumno")
+    tabla.heading("Fecha", text="Fecha")
+    tabla.heading("Estado", text="Estado")
+    tabla.heading("Materia", text="Materia")
+    tabla.heading("Maestro", text="Maestro")
 
-tabla.column("Estudiante", width=300, anchor="center")
-tabla.column("Fecha", width=200, anchor="center")
-tabla.column("Estado", width=200, anchor="center")
-tabla.column("Marcado por", width=350, anchor="center")
+    tabla.column("Matricula", width=120, anchor="center")
+    tabla.column("Alumno", width=250, anchor="center")
+    tabla.column("Fecha", width=120, anchor="center")
+    tabla.column("Estado", width=120, anchor="center")
+    tabla.column("Materia", width=180, anchor="center")
+    tabla.column("Maestro", width=220, anchor="center")
+ #datos de bd------------------------------------------------------------
+    datos = [
+    ]
 
-datos = [
-    ("Diego Morales", "02/06/2026", "Tardanza", "maestro@escuela.com"),
-    ("Ana Martínez", "02/06/2026", "Presente", "maestro@escuela.com"),
-    ("Carlos Rodríguez", "02/06/2026", "Ausente", "maestro@escuela.com"),
-    ("Elena Castillo", "02/06/2026", "Ausente", "maestro@escuela.com"),
-    ("Laura Fernández", "02/06/2026", "Presente", "maestro@escuela.com"),
-    ("Pedro Sánchez", "02/06/2026", "Presente", "maestro@escuela.com"),
-    ("Sofía Gómez", "02/06/2026", "Presente", "maestro@escuela.com"),
-]
+    for fila in datos:
+        tabla.insert("", "end", values=fila)
 
-for fila in datos:
-    tabla.insert("", "end", values=fila)
-
-tabla.pack(fill="both", expand=True)
-
-app.mainloop()
+    tabla.pack(fill="both", expand=True)

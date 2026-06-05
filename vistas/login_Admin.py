@@ -1,3 +1,5 @@
+from Controladores.usuario_controlador import Controlador_Usuario
+from vistas.menu_admin import abrir_menu_admin
 import customtkinter as ctk
 from PIL import Image
 
@@ -145,7 +147,7 @@ def abrir_login_admin():
         corner_radius=10
     )
     entry_password.place(relx=0.5, y=385, anchor="n")
-
+    
     # ==========================
     # LOGIN
     # ==========================
@@ -153,16 +155,37 @@ def abrir_login_admin():
         usuario = entry_usuario.get()
         password = entry_password.get()
 
-        if usuario == "admin" and password == "1234":
-            resultado.configure(text="Inicio de sesión correcto", text_color="green")
-        else:
-            resultado.configure(text="Usuario o contraseña incorrectos", text_color="red")
+        datos = Controlador_Usuario.login(usuario, password)
+        print(datos)
 
+        if datos:
+            id_usuario = datos[0]   
+            nombre_usuario = datos[1]
+            rol = datos[3]
+            
+            if rol.lower() in ["admin", "administrador"]:
+                resultado.configure(text="Inicio de sesión correcto", text_color="green")
+               
+                #destruye esta ventana pero envia el id, el nombre y el rol al menu admin
+                ventana.after(
+                    1000,
+                    lambda: (
+                        ventana.destroy(),
+                        abrir_menu_admin(id_usuario, nombre_usuario, rol)
+                    )
+                )
+            else:
+                resultado.configure(text="El usuario NO es administrador.", text_color="red")
+        else:
+            resultado.configure(
+                text="Usuario o contraseña incorrectos",text_color="red")
+    
+    
     # ==========================
     # RESULTADO
     # ==========================
-    resultado = ctk.CTkLabel(frame, text="", font=("Arial", 12))
-    resultado.place(relx=0.5, y=440, anchor="n")
+    resultado = ctk.CTkLabel(frame,text="",font=("Arial", 12))
+    resultado.place(relx=0.5,y=450,anchor="n")
 
     # ==========================
     # BOTÓN
