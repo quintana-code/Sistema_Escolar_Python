@@ -86,7 +86,7 @@ def abrir_login_principal():
     )
     descripcion.place(relx=0.5, y=315, anchor="center")
 
-    # FUNCIONES
+    # FUNCIONES para abrir cada login
     def profesor():
         ventana.destroy()
         abrir_login_maestro()

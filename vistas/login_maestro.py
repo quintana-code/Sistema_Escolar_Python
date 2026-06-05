@@ -155,7 +155,7 @@ def abrir_login_maestro():
             nombre_usuario = datos[1]
             rol= datos[3]
 
-            if rol == "Maestro":
+            if rol.lower() in ["maestro", "docente"]:
 
                 resultado.configure(
                     text="Inicio de sesión correcto",text_color="green")
